@@ -11,8 +11,8 @@ const testData = {
     timeSec: [0.425, 0.098, 0.052, 0.686, 0.066, 0.078, 0.070, 0.375, 0.058, 0.136,
             0.052, 0.063, 0.183, 0.087, 0.066, 0.558, 0.066, 0.068, 0.610, 0.057]
 };
-console.log(testData.timeSec);
-console.log(testData.sizeMB);
+//console.log(testData.timeSec);
+//console.log(testData.sizeMB);
 
 // Change data to tensors
 const trainSensors = {
@@ -33,8 +33,10 @@ model.add(
         units: 1
     })
 );
+const learningRate = 0.001;
+const sgdOptimizer = tf.train.sgd(learningRate);
 model.compile({
-    optimizer: 'sgd',
+    optimizer: sgdOptimizer,
     loss: 'meanAbsoluteError'
 });
 
@@ -42,13 +44,13 @@ model.compile({
 (async () => await model.fit(
     trainSensors.sizeMB,
     trainSensors.timeSec,
-    { epochs: 10 }
+    { epochs: 200 }
 ))();
 
 // Evaluate on test data
-model.evaluate(testSensors.sizeMB, testSensors.timeSec);
+model.evaluate(testSensors.sizeMB, testSensors.timeSec).print();
 
 // Prediction on new data
-model.predict(tf.tensor2d([[0.5], [7.8], [120]])).print();
+model.predict(tf.tensor2d([[1], [100], [10000]])).print();
 
 
